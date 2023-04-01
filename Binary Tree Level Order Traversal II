@@ -101,19 +101,16 @@ class Solution {
         sol(ans,root,0);
         List<List<Integer>> list = new ArrayList<List<Integer>>();
         for(int i=ans.size()-1;i>=0;i--){
-            if(!ans.get(i).isEmpty()){
                 ArrayList<Integer> levList = new ArrayList<Integer>(ans.get(i));
                 list.add(levList);
-            }
         }
         return list;
     }
     public void sol(List<List<Integer>> list, TreeNode curr, int level){
         if(curr==null) return;
         int temp = curr.val;
-        ArrayList<Integer> levList = new ArrayList<Integer>();
-        if(curr!=null)
-        list.add(levList);
+        if(list.size()<=level)
+        list.add(new ArrayList<Integer>());
         list.get(level).add(temp);
         sol(list,curr.left,level+1);
         sol(list,curr.right,level+1);
