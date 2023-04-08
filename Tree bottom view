@@ -1,0 +1,187 @@
+
+
+Given a binary tree , print the nodes in left to right manner as visible from below the tree
+Input Format
+
+Level order input for the binary tree will be given.
+Constraints
+
+No of nodes in the tree can be less than or equal to 10^7
+Output Format
+
+A single line containing space separated integers representing the bottom view of the tree
+Sample Input
+
+1 2 3 4 5 6 -1 -1 -1 -1 -1 -1 -1
+
+Sample Output
+
+4 2 6 3
+
+Explanation
+
+The tree looks like
+
+                 1
+              /      \
+           2           3
+        /     \       /
+       4       5     6
+
+(Note that 5 and 6 are at the same position so we consider the right one to lower)
+
+
+import java.util.*;
+import java.io.*;
+public class Main {
+    public static void main(String args[]) throws Exception{
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        String[] arr=br.readLine().split(" ");
+        BinaryTree bt=new BinaryTree(arr);
+        
+        bt.bottomView();
+        
+    }
+}
+
+class BinaryTree
+{
+    private class Node
+    {
+        int data;
+        Node left,right;
+        Node(int data)
+        {
+            this.data=data;
+        }
+    }
+	private class pair{
+		Node node;
+		int lev;
+	}
+    Node root;
+
+    BinaryTree(String[] arr)
+    {
+        Queue<Node> queue=new LinkedList<Node>();
+        construct(arr,0,queue);
+    }
+
+    public void bottomView()
+    {
+        bottomView(this.root);
+    }
+
+   private void bottomView(Node root) {
+		HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
+      Queue<pair> q= new LinkedList<pair>();
+	  pair p = new pair();
+	  p.node=root;
+	  p.lev=0;
+      q.add(p);
+      bView(map,q);
+		ArrayList<Integer> list = new ArrayList<Integer>();
+      for(int idx:map.keySet()){
+          list.add(idx);
+      }
+      Collections.sort(list);
+      for(int i:list){
+          System.out.print(map.get(i)+ " ");
+      }
+	}
+	public void bView(HashMap<Integer,Integer> map,Queue<pair> q) {
+        
+        if(q.isEmpty()) return;
+        pair p1=q.remove();
+      	map.put(p1.lev,p1.node.data);
+		pair pL=new pair();
+		if(p1.node.left!=null && p1.node.left.data!=-1){
+			pL.node=p1.node.left;
+			pL.lev=p1.lev-1;
+			q.add(pL);
+		}
+		
+		pair pR=new pair();
+		if(p1.node.right!=null && p1.node.right.data!=-1){
+			pR.node=p1.node.right;
+			pR.lev=p1.lev+1;
+        	q.add(pR);
+		}
+		
+	  bView(map,q);
+    }
+
+
+    private void construct(String[] arr,int ind,Queue<Node> queue)
+    {
+        if(ind>=arr.length)
+        return;
+        if(queue.size()==0)
+        {
+            Node nn=new Node(Integer.parseInt(arr[ind]));
+            this.root=nn;
+            queue.add(nn);
+        }
+        else
+        {
+            Node parent=queue.peek();
+                if(parent.data!=-1){
+                if(parent.left==null)
+                {
+                    parent.left=new Node(Integer.parseInt(arr[ind]));
+                    queue.add(parent.left);
+                }
+                else
+                {
+                    if(parent.right==null)
+                    {
+                    parent.right=new Node(Integer.parseInt(arr[ind]));
+                    queue.add(parent.right);
+                    queue.poll();
+                    }
+               }
+               }
+               else
+               {
+                   queue.poll();
+                   ind--;
+               }
+        }
+        construct(arr,ind+1,queue);
+    }
+
+    public void display()
+    {
+        display_tree(this.root);
+    }
+
+    private void display_tree(Node root)
+    {
+        if(root==null)
+        return;
+        String str=root.data+"";
+        if(root.left!=null)
+        {
+            str=root.left.data+" <= "+str;
+        }
+        else
+        {
+            str="END <= "+str;
+        }
+
+        if(root.right!=null)
+        {
+            str=str+" => "+root.right.data;
+        }
+        else
+        {
+            str=str+" => END";
+        }
+        System.out.println(str);
+        display_tree(root.left);
+        display_tree(root.right);
+
+    }
+
+
+}
