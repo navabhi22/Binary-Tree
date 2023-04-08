@@ -1,0 +1,142 @@
+Given a pointer to the root of a binary tree, print the top view of the binary tree.
+
+The tree as seen from the top the nodes, is called the top view of the tree.
+
+For example :
+
+   1
+    \
+     2
+      \
+       5
+      /  \
+     3    6
+      \
+       4
+
+Top View :
+Complete the function
+
+and print the resulting values on a single line separated by space.
+
+Input Format
+
+You are given a function,
+
+void topView(node * root) {
+
+}
+
+Constraints
+
+Nodes in the tree
+
+Output Format
+
+Print the values on a single line separated by space.
+
+Sample Input
+
+   1
+    \
+     2
+      \
+       5
+      /  \
+     3    6
+      \
+       4
+
+Sample Output
+
+1 2 5 6
+
+Explanation
+
+   1
+    \
+     2
+      \
+       5
+      /  \
+     3    6
+      \
+       4
+
+From the top, only nodes
+are visible.
+
+
+
+
+
+import java.util.*;
+import java.io.*;
+
+class Node {
+    Node left;
+    Node right;
+    int data;
+    
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+
+class Solution {
+
+	/* 
+    
+    class Node 
+    	int data;
+    	Node left;
+    	Node right;
+	*/
+    static class pair{
+        Node node;
+        int lev;
+    }
+	public static void topView(Node root) {
+      
+      HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
+      Queue<pair> q= new LinkedList<pair>();
+      pair p = new pair();
+      p.node=root;
+      p.lev=0;
+      q.add(p);
+      tView(map,q);
+      ArrayList<Integer> list = new ArrayList<Integer>();
+      for(int idx:map.keySet()){
+          list.add(idx);
+      }
+      Collections.sort(list);
+      for(int i:list){
+          System.out.print(map.get(i)+ " ");
+      }
+      
+      
+    }
+    public static void tView(HashMap<Integer,Integer> map,Queue<pair> q) {
+ 
+        if(q.isEmpty()) return;
+        pair p1=q.remove();
+        if(!map.containsKey(p1.lev))
+        map.put(p1.lev,p1.node.data);
+        //System.out.println(p1.lev-1);
+        pair pL=new pair();
+        if(p1.node.left!=null) {
+            pL.node=p1.node.left;
+            pL.lev=p1.lev-1;
+            //System.out.println(p1.lev-1);
+            q.add(pL);
+        }
+        pair pR=new pair();
+        if(p1.node.right!=null){
+            pR.node=p1.node.right;
+            pR.lev=p1.lev+1;
+            q.add(pR);
+        } 
+      tView(map,q);
+    }
